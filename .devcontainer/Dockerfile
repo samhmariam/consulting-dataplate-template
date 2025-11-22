@@ -57,6 +57,12 @@ RUN uv pip install --system \
     "dagster-webserver==1.12.3" \
     "dagster-postgres==0.28.3"
 
+# Dagster pulls grpcio-health-checking<1.63 which cannot import google.protobuf.runtime_version;
+# align with dbt constraints by pinning the older protobuf and grpcio-health-checking pair.
+RUN uv pip install --system \
+    "protobuf<5" \
+    "grpcio-health-checking<1.63"
+    
 # -----------------------------
 # Python Tooling (all pinned) + awscli v1
 # -----------------------------
