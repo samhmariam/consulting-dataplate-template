@@ -1,0 +1,27 @@
+# Python virtual environments
+.venv/
+
+# Bytecode
+__pycache__/
+*.pyc
+
+# Dagster runtime state (keep dagster.yaml)
+dagster_app/.dagster_home/*
+!dagster_app/.dagster_home/dagster.yaml
+
+# dbt build artifacts
+dbt/target/
+dbt/logs/
+dbt/packages/
+
+# Terraform local state
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+!*.tfvars.example
+crash.log
+
+# OS noise
+.DS_Store
+Thumbs.db

@@ -1,0 +1,41 @@
+{
+  "name": "analytics-stack",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "dev",
+  "workspaceFolder": "/workspaces/sovereign-tea-beta",
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "bungcip.better-toml",
+        "innoverio.vscode-dbt-power-user",
+        "hashicorp.terraform",
+        "ms-azuretools.vscode-docker",
+        "redhat.vscode-yaml",
+        "tamasfe.even-better-toml",
+        "eamodio.gitlens",
+        "github.vscode-github-cli"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.testing.pytestEnabled": true,
+        "editor.formatOnSave": true,
+        "files.trimTrailingWhitespace": true
+      }
+    }
+  },
+  "postCreateCommand": "bash scripts/bootstrap.sh",
+  "postStartCommand": "echo '✅ Dev container ready. Run: dagster dev -h 0.0.0.0 -p 3000 -w dagster_app/workspace.yaml'",
+  "forwardPorts": [
+    3000,
+    3001
+  ],
+  "portsAttributes": {
+    "3000": {
+      "label": "Dagster UI"
+    }
+  },
+  "remoteUser": "vscode"
+}

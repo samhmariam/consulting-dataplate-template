@@ -1,0 +1,11 @@
+storage:
+  sqlite:
+    base_dir: ${DAGSTER_HOME}/history
+local_artifact_storage:
+  module: dagster._core.storage.root
+  class: LocalArtifactStorage
+  config:
+    base_dir: ${DAGSTER_HOME}/storage
+run_launcher:
+  module: dagster._core.run_launcher.default_run_launcher
+  class: DefaultRunLauncher

@@ -1,0 +1,62 @@
+version: "3.9"
+
+services:
+  dev:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+
+    volumes:
+      - ..:/workspaces/sovereign-tea-beta:cached
+      # Allow docker CLI inside dev to talk to host docker (socket sharing)
+      - /var/run/docker.sock:/var/run/docker.sock
+
+    # Load secrets & Snowflake vars from .env (DO NOT commit .env)
+    env_file:
+      - ../.env
+
+    environment:
+      # Dagster
+      DAGSTER_HOME: /workspaces/sovereign-tea-beta/dagster_app/.dagster_home
+
+      # dbt
+      DBT_PROFILES_DIR: /workspaces/sovereign-tea-beta/dbt/profiles
+
+      # Optional override example:
+      # SNOWFLAKE_PRIVATE_KEY_PATH: ${SNOWFLAKE_PRIVATE_KEY_PATH}
+
+    depends_on:
+      dagster-postgres:
+        condition: service_healthy
+
+    # Keep container running for devcontainer
+    command: sleep infinity
+
+    ports:
+      - "3000:3000"  # Dagster UI (dagster dev)
+      - "3001:3001"  # Dagster gRPC if you use it
+
+  dagster-postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: dagster
+      POSTGRES_PASSWORD: dagster
+      POSTGRES_DB: dagster
+
+    # Optional: only expose if you want to connect using a host SQL client
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - dagster_pgdata:/var/lib/postgresql/data
+
+    # Healthcheck ensures service is READY before dev starts
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dagster"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+volumes:
+  dagster_pgdata:

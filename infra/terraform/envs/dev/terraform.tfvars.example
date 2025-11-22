@@ -1,0 +1,72 @@
+environment   = "dev"
+aws_region    = "us-east-1"
+
+snowflake_account  = "abc12345"
+snowflake_user     = "TERRAFORM_USER"
+snowflake_password = "REPLACE_ME"
+snowflake_role     = "ACCOUNTADMIN"
+
+snowflake_databases = [
+  {
+    name    = "ANALYTICS_DEV"
+    comment = "Development analytics workspace"
+  }
+]
+
+snowflake_warehouses = [
+  {
+    name = "TRANSFORMING_DEV"
+    size = "XSMALL"
+  }
+]
+
+snowflake_roles = [
+  {
+    name       = "TRANSFORMER_DEV"
+    warehouses = ["TRANSFORMING_DEV"]
+    databases  = ["ANALYTICS_DEV"]
+  }
+]
+
+dagster_network = null
+
+dagster_postgres = {
+  host     = "dagster-postgres.dev.internal"
+  port     = 5432
+  db_name  = "dagster"
+  username = "dagster"
+  password = "REPLACE_ME"
+}
+
+dagster_image    = "123456789012.dkr.ecr.us-east-1.amazonaws.com/dagster:dev"
+dagster_hostname = null
+
+dbt_execution_platform = {
+  type        = "ecs"
+  image_tag   = "123456789012.dkr.ecr.us-east-1.amazonaws.com/dbt:dev"
+  queue_arn   = "arn:aws:sqs:us-east-1:123456789012:dbt-dev"
+  schedule_cron = "0 * * * *"
+}
+
+dbt_role = {
+  name       = "DBT_DEV"
+  warehouses = ["TRANSFORMING_DEV"]
+  databases  = ["ANALYTICS_DEV"]
+  privileges = ["USAGE", "MONITOR"]
+}
+
+airbyte_host    = "https://airbyte.dev.internal"
+airbyte_api_key = "REPLACE_ME"
+
+airbyte_workspace = {
+  name = "Sovereign Tea Dev"
+}
+
+airbyte_sources = []
+airbyte_destinations = []
+airbyte_connections = []
+
+default_tags = {
+  project = "sovereign-tea"
+  env     = "dev"
+}

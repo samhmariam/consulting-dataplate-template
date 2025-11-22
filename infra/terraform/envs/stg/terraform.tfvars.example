@@ -1,0 +1,72 @@
+environment   = "stg"
+aws_region    = "us-east-1"
+
+snowflake_account  = "abc12345"
+snowflake_user     = "TERRAFORM_USER"
+snowflake_password = "REPLACE_ME"
+snowflake_role     = "ACCOUNTADMIN"
+
+snowflake_databases = [
+  {
+    name    = "ANALYTICS_STG"
+    comment = "Staging analytics workspace"
+  }
+]
+
+snowflake_warehouses = [
+  {
+    name = "TRANSFORMING_STG"
+    size = "SMALL"
+  }
+]
+
+snowflake_roles = [
+  {
+    name       = "TRANSFORMER_STG"
+    warehouses = ["TRANSFORMING_STG"]
+    databases  = ["ANALYTICS_STG"]
+  }
+]
+
+dagster_network = null
+
+dagster_postgres = {
+  host     = "dagster-postgres.stg.internal"
+  port     = 5432
+  db_name  = "dagster"
+  username = "dagster"
+  password = "REPLACE_ME"
+}
+
+dagster_image    = "123456789012.dkr.ecr.us-east-1.amazonaws.com/dagster:stg"
+dagster_hostname = null
+
+dbt_execution_platform = {
+  type        = "ecs"
+  image_tag   = "123456789012.dkr.ecr.us-east-1.amazonaws.com/dbt:stg"
+  queue_arn   = "arn:aws:sqs:us-east-1:123456789012:dbt-stg"
+  schedule_cron = "0 * * * *"
+}
+
+dbt_role = {
+  name       = "DBT_STG"
+  warehouses = ["TRANSFORMING_STG"]
+  databases  = ["ANALYTICS_STG"]
+  privileges = ["USAGE", "MONITOR"]
+}
+
+airbyte_host    = "https://airbyte.stg.internal"
+airbyte_api_key = "REPLACE_ME"
+
+airbyte_workspace = {
+  name = "Sovereign Tea Staging"
+}
+
+airbyte_sources = []
+airbyte_destinations = []
+airbyte_connections = []
+
+default_tags = {
+  project = "sovereign-tea"
+  env     = "stg"
+}

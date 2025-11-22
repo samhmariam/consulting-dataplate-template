@@ -1,0 +1,27 @@
+name: "sovereign_tea"
+version: "1.0.0"
+config-version: 2
+profile: "sovereign_tea"
+
+model-paths:
+  - models
+target-path: "target"
+macro-paths:
+  - macros
+seed-paths:
+  - seeds
+snapshot-paths:
+  - snapshots
+analysis-paths:
+  - analyses
+test-paths:
+  - tests
+
+models:
+  sovereign_tea:
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: ephemeral
+    marts:
+      +materialized: table
